@@ -1,0 +1,5 @@
+import path
+
+print(
+    __
+)
