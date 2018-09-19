@@ -6,11 +6,11 @@ page_counter = 0
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36"
 }
-base_url = 'https://yande.re/post?page={}&tags=sakimichan'
+base_url = 'https://yande.re/post?page={}&tags=girls_frontline'
 
 session = requests.session()
 
-while page_counter < 10:
+while page_counter < 33:
     r = session.get(base_url.format(page_counter), headers=headers)
 
     for i in set(re.findall(r'https://files.yande.re/[jpeg|image].*?\.(?:jpg|png)', r.content.decode())):
