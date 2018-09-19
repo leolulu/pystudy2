@@ -14,7 +14,7 @@ proxies = {
     'https': 'socks5://127.0.0.1:1080'
 }
 
-base_url = 'http://boards.4chan.org/gif'
+base_url = 'http://boards.4chan.org/e'
 
 r = requests.get(base_url+'/catalog',
                  headers=header, proxies=proxies)
@@ -38,18 +38,17 @@ for thread in threads_info:
     except:
         print('新建文件夹失败，跳过该thread.\n')
 
-    try:
         for post in post_container:
-            imgs = post.xpath(".//a[@class='fileThumb']/@href")
-            print(imgs)
-            f_name = post.xpath(".//div[@class='fileText']/a/text()")
-            print(f_name)
+            try:
+                imgs = post.xpath(".//a[@class='fileThumb']/@href")
+                print(imgs)
+                f_name = post.xpath(".//div[@class='fileText']/a/text()")
+                print(f_name)
 
-            if len(imgs) > 0:
-                print('downloading: ', f_name[0])
-                img = session.get('https:' + imgs[0], proxies=proxies)
-                with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
-                    f.write(img.content)
-    except:
-        print('建文件失败，没问题，下一个.\n')
-    
+                if len(imgs) > 0:
+                    print('downloading: ', f_name[0])
+                    img = session.get('https:' + imgs[0], proxies=proxies)
+                    with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
+                        f.write(img.content)
+            except:
+                print('建文件失败，没问题，下一个.\n')
