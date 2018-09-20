@@ -16,7 +16,7 @@ proxies = {
 
 base_url = 'http://boards.4chan.org/e'
 
-r = requests.get(base_url+'/catalog',
+r = session.get(base_url+'/catalog',
                  headers=header, proxies=proxies)
 rer = re.findall('var catalog =(.*?);var style_group', r.content.decode())
 threads_info = json.loads(rer[0])['threads']
