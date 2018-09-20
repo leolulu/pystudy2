@@ -25,7 +25,7 @@ threads_info = json.loads(rer[0])['threads']
 for thread in threads_info:
     thread_url = base_url+"/thread/"+thread
     thread_name = (threads_info[thread]['sub'] +
-                   threads_info[thread]['teaser'])[:80:].replace(r'/', '').replace(r':', '').replace('\\', '').replace('?', '').strip()
+                   threads_info[thread]['teaser'])[:80:].replace(r'/', '').replace(r'<', '').replace(r'>', '').replace(r':', '').replace('\\', '').replace('?', '').strip()
     print('开始处理thread: ', thread_name)
 
     in_r = session.get(thread_url, proxies=proxies)
@@ -35,20 +35,20 @@ for thread in threads_info:
 
     try:
         os.makedirs('./public/4chan/'+thread_name)
-    except:
-        print('新建文件夹失败，跳过该thread.\n')
+    except Exception as e:
+        print('新建文件夹失败，跳过该thread.\n',e)
 
-        for post in post_container:
-            try:
-                imgs = post.xpath(".//a[@class='fileThumb']/@href")
-                print(imgs)
-                f_name = post.xpath(".//div[@class='fileText']/a/text()")
-                print(f_name)
+    for post in post_container:
+        try:
+            imgs = post.xpath(".//a[@class='fileThumb']/@href")
+            print(imgs)
+            f_name = post.xpath(".//div[@class='fileText']/a/text()")
+            print(f_name)
 
-                if len(imgs) > 0:
-                    print('downloading: ', f_name[0])
-                    img = session.get('https:' + imgs[0], proxies=proxies)
-                    with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
-                        f.write(img.content)
-            except:
-                print('建文件失败，没问题，下一个.\n')
+            if len(imgs) > 0:
+                print('downloading: ', f_name[0])
+                img = session.get('https:' + imgs[0])
+                with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
+                    f.write(img.content)
+        except Exception as e:
+            print('建文件失败，没问题，下一个.\n',e)
