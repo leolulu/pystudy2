@@ -14,10 +14,10 @@ proxies = {
     'https': 'socks5://127.0.0.1:1080'
 }
 
-base_url = 'http://boards.4chan.org/e'
+base_url = 'http://boards.4chan.org/wg'
 
 r = session.get(base_url+'/catalog',
-                 headers=header, proxies=proxies)
+                headers=header, proxies=proxies)
 rer = re.findall('var catalog =(.*?);var style_group', r.content.decode())
 threads_info = json.loads(rer[0])['threads']
 
@@ -28,15 +28,18 @@ for thread in threads_info:
                    threads_info[thread]['teaser'])[:80:].replace(r'/', '').replace(r'<', '').replace(r'>', '').replace(r':', '').replace('\\', '').replace('?', '').strip()
     print('开始处理thread: ', thread_name)
 
-    in_r = session.get(thread_url, proxies=proxies)
-    in_html = etree.HTML(in_r.content)
+    try:
+        in_r = session.get(thread_url, proxies=proxies)
+        in_html = etree.HTML(in_r.content)
+    except Exception as e:
+        print('远程主机中断？ ', e)
 
     post_container = in_html.xpath("//div[contains(@class,'postContainer')]")
 
     try:
         os.makedirs('./public/4chan/'+thread_name)
     except Exception as e:
-        print('新建文件夹失败，跳过该thread.\n',e)
+        print('新建文件夹失败，跳过该thread.\n', e)
 
     for post in post_container:
         try:
@@ -51,4 +54,4 @@ for thread in threads_info:
                 with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
                     f.write(img.content)
         except Exception as e:
-            print('建文件失败，没问题，下一个.\n',e)
+            print('建文件失败，没问题，下一个.\n', e)
