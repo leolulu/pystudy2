@@ -14,7 +14,7 @@ proxies = {
     'https': 'socks5://127.0.0.1:1080'
 }
 
-base_url = 'http://boards.4chan.org/wg'
+base_url = 'http://boards.4chan.org/gif'
 
 r = session.get(base_url+'/catalog',
                 headers=header, proxies=proxies)
@@ -24,7 +24,7 @@ threads_info = json.loads(rer[0])['threads']
 
 for thread in threads_info:
     thread_url = base_url+"/thread/"+thread
-    thread_name = (threads_info[thread]['sub'] +
+    thread_name = (threads_info[thread]['sub'] +'-→'+
                    threads_info[thread]['teaser'])[:80:].replace(r'/', '').replace(r'<', '').replace(r'>', '').replace(r':', '').replace('\\', '').replace('?', '').strip()
     print('开始处理thread: ', thread_name)
 
