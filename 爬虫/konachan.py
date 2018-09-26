@@ -12,7 +12,7 @@ proxies = {
 }
 session = requests.session()
 
-while page_num<20:
+while page_num<10:
     r = session.get('http://konachan.com/post?page={}&tags='.format(page_num),headers=headers,proxies=proxies)
     html = etree.HTML(r.content)
     pic_url_list = html.xpath("//ul[@id='post-list-posts']/li/a/@href")
