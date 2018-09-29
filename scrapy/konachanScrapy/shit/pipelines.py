@@ -6,6 +6,12 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class FirstscrapyPipeline(object):
+class ShitPipeline(object):
     def process_item(self, item, spider):
+        print(
+            item['page_num'],
+            item['url']
+        )
+        with open('./public/'+item['pic_name'],'wb') as f:
+            f.write(item['img_data'])
         return item
