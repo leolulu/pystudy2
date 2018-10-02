@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for gebolur project
+# Scrapy settings for middlewaretest project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,13 +9,13 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'gebolur'
+BOT_NAME = 'middlewaretest'
 
-SPIDER_MODULES = ['gebolur.spiders']
-NEWSPIDER_MODULE = 'gebolur.spiders'
+SPIDER_MODULES = ['middlewaretest.spiders']
+NEWSPIDER_MODULE = 'middlewaretest.spiders'
 
-LOG_LEVEL = 'WARNING'
-COOKIES_DEBUG = False
+# LOG_LEVEL = 'WARNING'
+COOKIES_DEBUG = True
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -25,7 +25,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 1
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -50,13 +50,14 @@ CONCURRENT_REQUESTS = 32
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'gebolur.middlewares.GebolurSpiderMiddleware': 543,
+#    'middlewaretest.middlewares.MiddlewaretestSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'gebolur.middlewares.ProxyMiddleware': 543,
+   'middlewaretest.middlewares.ProxyMiddleware': 542,
+   'middlewaretest.middlewares.Cookiemiddleware': 543,
 }
 
 # Enable or disable extensions
@@ -67,9 +68,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'gebolur.pipelines.GebolurPipeline': 300,
-}
+#ITEM_PIPELINES = {
+#    'middlewaretest.pipelines.MiddlewaretestPipeline': 300,
+#}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

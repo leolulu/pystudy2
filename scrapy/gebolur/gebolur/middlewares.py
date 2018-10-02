@@ -49,7 +49,10 @@ class GebolurSpiderMiddleware(object):
         # that it doesn’t have a response associated.
 
         # Must return only requests (not items).
+        cookies = "ADNF=a642803401bb64e8eda3f18ee36a7435; __utma=52483902.408065444.1446641088.1492218118.1492355795.289; _ga=GA1.2.408065444.1446641088; user_id=319612; pass_hash=f2ad63ed1614fcddb823dd9fa188feec8fc7c5e6; __cfduid=d6835714e71f517ccc437fddbf831d7191519553182; PHPSESSID=inejr4fp2vaumejc4qpg4d30k6; _gid=GA1.2.1746635511.1538298884; Hm_lvt_ba7c84ce230944c13900faeba642b2b4=1538062706,1538067373,1538131572,1538298885; resize-notification=1; resize-original=1; gelcomPoop=1; Hm_lpvt_ba7c84ce230944c13900faeba642b2b4=1538448052"
+        cookies = { i.split('=')[0]:i.split('=')[1] for i in cookies.split(';') }
         for r in start_requests:
+            r['cookies'] = cookies
             yield r
 
     def spider_opened(self, spider):
