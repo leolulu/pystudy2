@@ -34,12 +34,14 @@ for stock in stocks:
 
 for i in stock_info:
     print(i)
-    sql = '''insert into new_stock values("{}","{}","{}",{},{})'''.format(
-        i['股票代码'],
-        i['股票简称'],
-        i['申购日期'],
-        float(i['中签率']),
-        float(i['发行价格'])
-    )
-    cursor.execute(sql)
+    # sql = '''insert into new_stock values("{}","{}","{}",{},{})'''.format(
+    #     i['股票代码'],
+    #     i['股票简称'],
+    #     i['申购日期'],
+    #     float(i['中签率']),
+    #     float(i['发行价格'])
+    # )
+    sql = 'insert into new_stock values(%s,%s,%s,%s,%s)'
+    params = (i['股票代码'],i['股票简称'],i['申购日期'],i['中签率'],i['发行价格'])
+    cursor.execute(sql,params)
     db.commit()

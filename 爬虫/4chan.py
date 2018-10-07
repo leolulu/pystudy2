@@ -50,7 +50,7 @@ for thread in threads_info:
 
             if len(imgs) > 0:
                 print('downloading: ', f_name[0])
-                img = session.get('https:' + imgs[0])
+                img = session.get('https:' + imgs[0],proxies = proxies)
                 with open('./public/4chan/'+thread_name+'/' + f_name[0], 'wb') as f:
                     f.write(img.content)
         except Exception as e:
