@@ -71,8 +71,11 @@ class TemperatureAnalysis():
             data['wind']
         )
         # 操作数据库
-        self.cursor.execute(sql, params)
-        self.db.commit()
+        try:
+            self.cursor.execute(sql, params)
+            self.db.commit()
+        except Exception as e:
+            print(e)
 
     def run(self):
         for every_url in self.page_parser(self.city_url):
