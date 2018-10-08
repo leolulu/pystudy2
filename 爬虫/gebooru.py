@@ -15,7 +15,10 @@ proxies = {
 base_url = 'https://gelbooru.com/index.php?page=post&s=list&tags=animated&pid={}'
 
 for page_num in range(10):
-    r_page = requests.get(base_url.format(page_num*42))
+    try:
+        r_page = requests.get(base_url.format(page_num*42))
+    except:
+        pass
     html = etree.HTML(r_page.content)
     item_urls = html.xpath("//div[@class='contain-push']/div[@class='thumbnail-preview']//a/@href")
     for item_url in item_urls:

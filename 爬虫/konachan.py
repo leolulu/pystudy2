@@ -13,12 +13,15 @@ proxies = {
 session = requests.session()
 
 while page_num<10:
-    r = session.get('http://konachan.com/post?page={}&tags='.format(page_num),headers=headers,proxies=proxies)
+    r = session.get('http://konachan.net/post?page={}&tags='.format(page_num),headers=headers,proxies=proxies)
     html = etree.HTML(r.content)
     pic_url_list = html.xpath("//ul[@id='post-list-posts']/li/a/@href")
     for i in pic_url_list:
         pic_name=i.split('/')[-1].replace('%20','_').replace('Konachan.com_-_','')
         print('downloading: ',page_num,pic_name)
         with open('./public/konachan/'+pic_name,'wb') as f:
-            f.write(session.get(i,proxies=proxies).content)
+            try:
+                f.write(session.get(i,proxies=proxies).content)
+            except:
+                pass
     page_num+=1
