@@ -1,7 +1,8 @@
-trsa = """sj{}ot
-fdf{}dsf
-fuc{}k""".format(1,2,3)
+from urllib import parse
 
-print(
-    trsa
-)
+a = "http://www.tianqihoubao.com/lishi/chengdu.html"
+b = "/lishi/chengdu/month/201803.html"
+
+c = parse.urljoin(a,b)
+
+print(c)

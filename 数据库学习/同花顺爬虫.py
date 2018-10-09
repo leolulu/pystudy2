@@ -45,3 +45,5 @@ for i in stock_info:
     params = (i['股票代码'],i['股票简称'],i['申购日期'],i['中签率'],i['发行价格'])
     cursor.execute(sql,params)
     db.commit()
+
+db.close()

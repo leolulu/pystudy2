@@ -15,6 +15,10 @@ SPIDER_MODULES = ['kubahime.spiders']
 NEWSPIDER_MODULE = 'kubahime.spiders'
 
 LOG_LEVEL = 'WARNING'
+<<<<<<< HEAD:scrapy/firstscrapy/firstscrapy/settings.py
+
+=======
+>>>>>>> 6c742d3389f4108fd48fd6b99b69707eaa84a951:scrapy/kubahime/kubahime/settings.py
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'kubahime (+http://www.yourdomain.com)'
@@ -66,7 +70,11 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+<<<<<<< HEAD:scrapy/firstscrapy/firstscrapy/settings.py
+   'firstscrapy.pipelines.FirstscrapyPipeline': 300,
+=======
    'kubahime.pipelines.KubahimePipeline': 300,
+>>>>>>> 6c742d3389f4108fd48fd6b99b69707eaa84a951:scrapy/kubahime/kubahime/settings.py
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
