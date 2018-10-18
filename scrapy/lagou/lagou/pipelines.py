@@ -8,4 +8,17 @@
 
 class LagouPipeline(object):
     def process_item(self, item, spider):
+        sql = 'insert into lagou_job_info values(%s,%s,%s,%s)'
+        params = (
+            item['job_name'],
+            item['company'],
+            item['job_request'],
+            item['description']
+        )
+        # 操作数据库
+        try:
+            spider.cursor.execute(sql, params)
+            spider.db.commit()
+        except Exception as e:
+            print(e)
         return item

@@ -2,6 +2,8 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+import re
+import pymysql
 
 
 class LgSpider(CrawlSpider):
@@ -12,8 +14,14 @@ class LgSpider(CrawlSpider):
     cookie = {i.split('=')[0]: i.split('=')[1] for i in cookie.split('; ')}
 
     rules = (
-        Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
+        Rule(LinkExtractor(restrict_xpaths=r"//ul[@class='rec_pos']/li/div[@class='rec_pos_l']//a"), callback='parse_item', follow=False),
     )
+
+    def __init__(self, *args, **kwargs):
+        super(LgSpider, self).__init__(*args, **kwargs)
+        # 启动数据库
+        self.db = pymysql.connect(host='132.232.0.240', port=3306, user='yxy', password='test', database='mydb')
+        self.cursor = self.db.cursor()
 
     def start_requests(self):
         yield scrapy.Request(
@@ -22,13 +30,21 @@ class LgSpider(CrawlSpider):
             cookies=LgSpider.cookie
         )
 
-    def parse_start_url(self,response):
-        with open('response.html','w',encoding='utf-8') as f:
+    def parse_start_url(self, response):
+        with open('response.html', 'w', encoding='utf-8') as f:
             f.write(response.body.decode())
 
     def parse_item(self, response):
         i = {}
-        #i['domain_id'] = response.xpath('//input[@id="sid"]/@value').extract()
-        #i['name'] = response.xpath('//div[@id="name"]').extract()
-        #i['description'] = response.xpath('//div[@id="description"]').extract()
-        return i
+        i['job_name'] = response.xpath("//div[@class='position-head']//*[@class='name']/text()").extract_first()
+        i['company'] = response.xpath("//div[@class='position-head']//*[@class='company']/text()").extract_first()
+        job_request1 = response.xpath("//div[@class='position-head']//dd[@class='job_request']/p[1]/*[1]/text()").extract_first()
+        job_request2 = response.xpath("//div[@class='position-head']//dd[@class='job_request']/p[1]/*[2]/text()").extract_first()
+        job_request3 = response.xpath("//div[@class='position-head']//dd[@class='job_request']/p[1]/*[3]/text()").extract_first()
+        job_request4 = response.xpath("//div[@class='position-head']//dd[@class='job_request']/p[1]/*[4]/text()").extract_first()
+        job_request5 = response.xpath("//div[@class='position-head']//dd[@class='job_request']/p[1]/*[5]/text()").extract_first()
+        i['job_request'] = job_request1+job_request2+job_request3+job_request4+job_request5
+        description = response.xpath("//dd[@class='job_bt']/div//text()").extract()
+        description = [re.sub(r"\s", '', i) for i in description]
+        i['description'] = '\n'.join([i for i in description if i != ''])
+        yield i
