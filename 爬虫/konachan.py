@@ -12,8 +12,9 @@ proxies = {
 }
 session = requests.session()
 
-while page_num < 10:
-    r = session.get('http://konachan.com/post?page={}&tags='.format(page_num), headers=headers, proxies=proxies)
+
+def parse_r(r):
+    global page_num
     html = etree.HTML(r.content)
     pic_url_list = html.xpath("//ul[@id='post-list-posts']/li/a/@href")
     for i in pic_url_list:
@@ -22,6 +23,21 @@ while page_num < 10:
         with open('./public/konachan/'+pic_name, 'wb') as f:
             try:
                 f.write(session.get(i, proxies=proxies).content)
-            except:
-                pass
+            except Exception as e:
+                print('下载图片出错了: ', e)
     page_num += 1
+
+
+def get_r():
+    global page_num
+    return session.get('http://konachan.com/post?page={}&tags='.format(page_num), headers=headers, proxies=proxies)
+
+
+while page_num < 60:
+    try:
+        r = get_r()
+    except Exception as e:
+        print('读取页面出错了: ', e)
+        r = get_r()
+    else:
+        parse_r(r)

@@ -1,6 +1,7 @@
 import requests
 from lxml import etree
 from urllib import parse
+import os
 
 
 # while page_num < 10:
@@ -34,51 +35,87 @@ class KonachanInner:
         self.session = requests.session()
         self.artist_exsist_list = []
 
-    def temp_print(self, item):
-        print(item)
+    def extract(self, item):
+        if len(item) == 0:
+            return None
+        else:
+            return item[0]
 
-    def artist_exsist_func(self, artist_tag_name, func):
+    def new_folder(self, folder_name):
+        '''
+        新建文件夹
+        '''
+        os.makedirs('./public/konachan/{}'.format(folder_name))
+
+    def artist_exsist_func(self, artist_tag_name):
         """
         作者排重
         包括方法调用
+        返回要处理的作者名称
         """
         if artist_tag_name in self.artist_exsist_list:
             print(artist_tag_name, ': 此artist已存在，跳过')
         elif artist_tag_name == self.except_artist_tag:
-            print(artist_tag_name, ': 未知通用artist，跳过')
+            print(artist_tag_name, ': 系通用artist，跳过')
         else:
             self.artist_exsist_list.append(artist_tag_name)
-            func(artist_tag_name)
+            return artist_tag_name  # 对于第一次遇到的作者调用处理方法
 
     def url_compliet(self, url):
-        return parse.urljoin(self.base_url, url)
+        '''
+        补全url地址
+        '''
+        if url is None:
+            return None
+        else:
+            return parse.urljoin(self.base_url, url)
 
     def parse_url(self, url):
-        return self.session.get(url, headers=self.headers, proxies=self.proxies)
+        '''
+        返回可以直接xpath的HTML对象
+        '''
+        r = self.session.get(url, headers=self.headers, proxies=self.proxies)
+        return etree.HTML(r.content)
 
     def parse_mainpage(self):
         """
         解析每一个首页
         """
-        r = self.parse_url('{}?page={}&tags='.format(self.base_url, self.page_num))
-        html = etree.HTML(r.content)
+        html = self.parse_url('{}?page={}&tags='.format(self.base_url, self.page_num))
         detail_page_urls = html.xpath("//ul[@id='post-list-posts']/li/div/a/@href")
         detail_page_urls = map(self.url_compliet, detail_page_urls)
         return detail_page_urls
 
-    def parse_detail_page(self, url_list):
+    def parse_detail_page(self, url_list, deal_func):
         """
         解析详情页
         """
         for url in url_list:
-            r = self.parse_url(url)
-            html = etree.HTML(r.content)
+            html = self.parse_url(url)
             artist_name = html.xpath("//li[contains(@class,'tag-type-artist')]/a[2]/text()")[0]
-            self.artist_exsist_func(artist_name,self.temp_print)
+            artist_url = self.url_compliet(html.xpath("//li[contains(@class,'tag-type-artist')]/a[2]/@href")[0])
+            # orig_img_url = html.xpath("//div[@class='sidebar']//a[contains(@class,'highres-show')]/@href")[0]
+            if self.artist_exsist_func(artist_name) is not None:
+                # 1.点击作者进入作者图像列表
+                html = self.parse_url(artist_url)
+                next_url = artist_url
+                while next_url is not None:
+                    next_url = self.url_compliet(self.extract(html.xpath("//a[text()='Next →']/@href")))
+                    img_url_list = html.xpath("//ul[@id='post-list-posts']/li/a/@href")
+                    # self.download_img(img_url_list)
+                    print(img_url_list)
+                # 2.获取图像
+
+    # def download_img(self, img_url_list):
+    #     for i in img_url_list:
+    #         pic_name = i.split('/')[-1].replace('%20', '_').replace('Konachan.com_-_', '')
+    #         print('downloading: ', page_num, pic_name)
+    #         with open('./public/konachan/'+pic_name, 'wb') as f:
+    #             f.write(session.get(i, proxies=proxies).content)
 
     def run(self):
-        detail_page_urls = self.parse_mainpage() #解析首页，获得每一个详情页的地址
-        self.parse_detail_page(detail_page_urls) #解析详情页
+        detail_page_urls = self.parse_mainpage()  # 解析首页，获得每一个详情页的地址
+        self.parse_detail_page(detail_page_urls, self.artist_exsist_func)  # 解析详情页(包括回调函数)
 
 
 k1 = KonachanInner()
