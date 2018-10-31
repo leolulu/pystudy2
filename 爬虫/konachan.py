@@ -38,6 +38,5 @@ while page_num < 60:
         r = get_r()
     except Exception as e:
         print('读取页面出错了: ', e)
-        r = get_r()
     else:
         parse_r(r)
