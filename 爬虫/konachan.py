@@ -33,7 +33,7 @@ def get_r():
     return session.get('http://konachan.com/post?page={}&tags='.format(page_num), headers=headers, proxies=proxies)
 
 
-while page_num < 60:
+while page_num < 20:
     try:
         r = get_r()
     except Exception as e:
