@@ -30,10 +30,10 @@ def parse_r(r):
 
 def get_r():
     global page_num
-    return session.get('http://konachan.com/post?page={}&tags='.format(page_num), headers=headers, proxies=proxies)
+    return session.get('http://konachan.net/post?page={}&tags='.format(page_num), headers=headers, proxies=proxies)
 
 
-while page_num < 20:
+while page_num < 60:
     try:
         r = get_r()
     except Exception as e:

@@ -1,15 +1,13 @@
-a = ['a','b','c','d']
-
-# print(a)
-
-# def add(i):
-#     i = i+'ass'
-#     # return i+'ass'
-
-# b = list(map(add,a))
-
-# print(b)
+import os
 
 print(
-    
+    os.getcwd()
+)
+
+print(
+    os.path.abspath(__file__)
+)
+
+print(
+    sys.path
 )

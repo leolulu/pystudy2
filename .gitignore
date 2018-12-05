@@ -23,6 +23,7 @@ yarn-error.log*
 *.jpeg
 *.png
 *.gif
+*.xlsx
 
 # self
 /public/*
