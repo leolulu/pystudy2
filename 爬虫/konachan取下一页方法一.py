@@ -1,5 +1,7 @@
 import requests
 from lxml import etree
+import os
+import re
 
 page_num = 1
 headers = {
@@ -12,7 +14,14 @@ proxies = {
 }
 session = requests.session()
 
-next_page_url = 'http://konachan.com/post?tags=gomezu'
+next_page_url = 'http://konachan.net/post?tags=sideboob'
+
+dir_name = './public/konachan-{}/'.format(re.findall(r"tags=(.+)", next_page_url)[0])
+
+try:
+    os.mkdir(dir_name)
+except Exception as e:
+    print(e)
 
 while next_page_url is not None:
     r = session.get(next_page_url, headers=headers, proxies=proxies)
@@ -22,8 +31,8 @@ while next_page_url is not None:
 
     pic_url_list = html.xpath("//ul[@id='post-list-posts']/li/a/@href")
     for i in pic_url_list:
-        pic_name = i.split('/')[-1].replace('%20','_').replace('Konachan.com_-_', '')
+        pic_name = i.split('/')[-1].replace('%20', '_').replace('Konachan.com_-_', '')
         print('downloading: ', page_num, pic_name)
-        with open('./public/konachan/'+pic_name, 'wb') as f:
+        with open(dir_name+pic_name, 'wb') as f:
             f.write(session.get(i, proxies=proxies).content)
     page_num += 1

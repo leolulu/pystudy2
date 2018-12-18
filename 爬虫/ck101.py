@@ -19,7 +19,7 @@ for i in range(671):
     page_num = i+1
     browser.get(url.format(page_num))
     print(url.format(page_num))
-    sleep(10)
+    # sleep(10)
     xpath_result = etree.HTML(browser.page_source).xpath("//div[@class='titleBox']//a/@title")
     
 
