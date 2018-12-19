@@ -34,5 +34,8 @@ while next_page_url is not None:
         pic_name = i.split('/')[-1].replace('%20', '_').replace('Konachan.com_-_', '')
         print('downloading: ', page_num, pic_name)
         with open(dir_name+pic_name, 'wb') as f:
-            f.write(session.get(i, proxies=proxies).content)
+            try:
+                f.write(session.get(i, proxies=proxies).content)
+            except Exception as e:
+                print('下载文件出错：',e)
     page_num += 1

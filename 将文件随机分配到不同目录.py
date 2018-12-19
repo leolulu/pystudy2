@@ -4,10 +4,10 @@ import math
 import random
 from PIL import Image
 # 定义文件目录及变量
-base_path = r'F:\F盘中转站\flower\[TVKD]kamosu_kamosuzo'
+base_path = r'E:\python\pystudy2\public\konachan-sideboob'
 dic_path = r'F:\F盘中转站\flower'
 batch_capacity = 30
-batch_dir_name = '[TVKD]kamosu_kamosuzo({})'
+batch_dir_name = 'sideboob({})'
 # 读取文件列表
 file_list = os.listdir(base_path)
 random.shuffle(file_list)
