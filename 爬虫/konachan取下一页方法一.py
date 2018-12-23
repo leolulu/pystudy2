@@ -14,7 +14,7 @@ proxies = {
 }
 session = requests.session()
 
-next_page_url = 'http://konachan.net/post?tags=sideboob'
+next_page_url = 'http://konachan.com/post?tags=pantyhose'
 
 dir_name = './public/konachan-{}/'.format(re.findall(r"tags=(.+)", next_page_url)[0])
 
