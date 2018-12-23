@@ -4,9 +4,9 @@ import math
 import random
 from PIL import Image
 # 定义文件目录及变量
-base_path = r'E:\python\pystudy2\public\yandere'
+base_path = r'E:\python\pystudy2\public\konachan'
 dic_path = r'F:\F盘中转站\flower'
-batch_dir_name = 'yandere'
+batch_dir_name = base_path.split('\\')[-1]
 batch_capacity = 50
 dic_path = os.path.join(dic_path, batch_dir_name)
 # 读取文件列表
@@ -23,9 +23,10 @@ for i in core_list:
         i['img_size'] = Image.open(i['file_dir']).size
     except Exception as e:
         print(e)
-        core_list.remove(i)
+        i['file_dir'] = None
 
-print(core_list)
+core_list = [i for i in core_list if i['file_dir'] is not None]
+
 for i in core_list:
     try:
         i['aspect_ratio'] = i['img_size'][0] / i['img_size'][1]
