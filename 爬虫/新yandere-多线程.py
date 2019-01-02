@@ -4,6 +4,7 @@ import time
 import os
 from retrying import retry
 from concurrent.futures import ThreadPoolExecutor
+import threading
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
@@ -29,19 +30,32 @@ pic_url_list = []
 length_of_pic_left = 0
 # //div[@class='pagination']/a[last()-1]/text()
 # https://yande.re/post?tags=pantyhose&page=613
+lock = threading.Lock()
+page_num = 1
 
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
-def processing(next_url):
-    page_num = 1
-    # next_url = 'https://yande.re/post?tags=g41_%28girls_frontline%29'
-    while next_url is not None:
-        r = requests.get(next_url, proxies=proxies, headers=headers).content
+def processing(page_url):
+    global page_num
+    print(page_url)
+    r = requests.get(page_url, proxies=proxies, headers=headers).content
+    with lock:
         img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
         pic_url_list.extend(img_urls)
-        next_url = 'https://yande.re' + etree.HTML(r).xpath("//a[@class='next_page']/@href")[0] if len(etree.HTML(r).xpath("//a[@class='next_page']/@href")) > 0 else None
         print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
         page_num += 1
+# @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
+# def processing(next_url):
+#     page_num = 1
+#     # next_url = 'https://yande.re/post?tags=g41_%28girls_frontline%29'
+#     while next_url is not None:
+#         r = requests.get(next_url, proxies=proxies, headers=headers).content
+#         img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
+#         pic_url_list.extend(img_urls)
+#         next_url = 'https://yande.re' + etree.HTML(r).xpath("//a[@class='next_page']/@href")[0] if len(etree.HTML(r).xpath("//a[@class='next_page']/@href")) > 0 else None
+#         print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
+#         page_num += 1
+
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def downloadPic(img_url):
@@ -61,7 +75,12 @@ def downloadPic(img_url):
 
 
 for url in next_url_list:
-    processing(url)
+    r = requests.get(url, proxies=proxies, headers=headers).content
+    catagray_page_count = int(etree.HTML(r).xpath("//div[@class='pagination']/a[last()-1]/text()")[0])
+    with ThreadPoolExecutor(max_workers=32) as excutor:
+        # for url in [url+'&page='+str(i+1) for i in range(catagray_page_count)]:
+        #     excutor.submit(processing,url)
+        excutor.map(processing, [url+'&page='+str(i+1) for i in range(catagray_page_count)])
 print('total list crawl finish.')
 
 length_of_pic_left = len(pic_url_list)
