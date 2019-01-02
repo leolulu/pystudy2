@@ -18,21 +18,20 @@ try:
 except:
     pass
 
-# next_url_list = [
-#     'https://yande.re/post?tags=fishnets',
-#     'https://yande.re/post?tags=garter',
-#     'https://yande.re/post?tags=heels',
-#     'https://yande.re/post?tags=pantyhose'
-# ]
-
 next_url_list = [
-    'https://yande.re/post?tags=armor+torn_clothes'
+    'https://yande.re/post?tags=fishnets',
+    'https://yande.re/post?tags=garter',
+    'https://yande.re/post?tags=heels',
+    'https://yande.re/post?tags=pantyhose'
 ]
+
 pic_url_list = []
 length_of_pic_left = 0
+# //div[@class='pagination']/a[last()-1]/text()
+# https://yande.re/post?tags=pantyhose&page=613
 
 
-@retry(wait_fixed=5000, stop_max_attempt_number=7)
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def processing(next_url):
     page_num = 1
     # next_url = 'https://yande.re/post?tags=g41_%28girls_frontline%29'
@@ -44,21 +43,21 @@ def processing(next_url):
         print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
         page_num += 1
 
-# @retry(wait_fixed=5000, stop_max_attempt_number=7)
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def downloadPic(img_url):
     global length_of_pic_left
     # print('downloading: ', 'page:{} '.format(str(page_num)), img_url)
     with open("./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', ''), 'wb') as f:
-        try:
-            f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
-            length_of_pic_left -= 1
-            print('{}pics left to download.'.format(length_of_pic_left))
-        except Exception as e:
-            print(e)
-            time.sleep(60)
-        # f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
-        # length_of_pic_left -= 1
-        # print('{}pics left to download.'.format(length_of_pic_left))
+        # try:
+        #     f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
+        #     length_of_pic_left -= 1
+        #     print('{}pics left to download.'.format(length_of_pic_left))
+        # except Exception as e:
+        #     print(e)
+        #     time.sleep(60)
+        f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
+        length_of_pic_left -= 1
+        print('{}pics left to download.'.format(length_of_pic_left))
 
 
 for url in next_url_list:
