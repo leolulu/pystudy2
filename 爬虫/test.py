@@ -1,4 +1,5 @@
 import os
+from retry import retry
 
 print(
     os.getcwd()
@@ -6,8 +7,4 @@ print(
 
 print(
     os.path.abspath(__file__)
-)
-
-print(
-    sys.path
 )

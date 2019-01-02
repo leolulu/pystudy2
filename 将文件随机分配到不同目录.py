@@ -4,8 +4,8 @@ import math
 import random
 from PIL import Image
 # 定义文件目录及变量
-base_path = r'E:\python\pystudy2\public\konachan'
-dic_path = r'F:\F盘中转站\flower'
+base_path = r'E:\python\pystudy2\public\yandere'
+dic_path = r'F:\F盘中转站'
 batch_dir_name = base_path.split('\\')[-1]
 batch_capacity = 50
 dic_path = os.path.join(dic_path, batch_dir_name)
@@ -49,6 +49,12 @@ for i in range(how_many_batch+1):
             shutil.move(file_name,str(i))'''
 for i in range(how_many_batch):
     for j in range(batch_capacity):
-        shutil.move(core_list.pop()['file_dir'], dic_list[i])
+        try:
+            shutil.move(core_list.pop()['file_dir'], dic_list[i])
+        except Exception as e:
+            print(e)
 for i in range(len(core_list)):
-    shutil.move(core_list.pop()['file_dir'], dic_list[-1])
+    try:
+        shutil.move(core_list.pop()['file_dir'], dic_list[-1])
+    except Exception as e:
+        print(e)
