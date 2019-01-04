@@ -20,10 +20,10 @@ except:
     pass
 
 next_url_list = [
-    'https://yande.re/post?tags=fishnets',
-    'https://yande.re/post?tags=garter',
-    'https://yande.re/post?tags=heels',
-    'https://yande.re/post?tags=pantyhose'
+    # 'https://yande.re/post?tags=fishnets',
+    # 'https://yande.re/post?tags=garter',
+    # 'https://yande.re/post?tags=pantyhose'
+    'https://yande.re/post?tags=ass+pantyhose'
 ]
 
 pic_url_list = []
@@ -77,7 +77,7 @@ def downloadPic(img_url):
 for url in next_url_list:
     r = requests.get(url, proxies=proxies, headers=headers).content
     catagray_page_count = int(etree.HTML(r).xpath("//div[@class='pagination']/a[last()-1]/text()")[0])
-    with ThreadPoolExecutor(max_workers=32) as excutor:
+    with ThreadPoolExecutor(max_workers=128) as excutor:
         # for url in [url+'&page='+str(i+1) for i in range(catagray_page_count)]:
         #     excutor.submit(processing,url)
         excutor.map(processing, [url+'&page='+str(i+1) for i in range(catagray_page_count)])
@@ -85,5 +85,5 @@ print('total list crawl finish.')
 
 length_of_pic_left = len(pic_url_list)
 
-with ThreadPoolExecutor(max_workers=4) as excutor:
+with ThreadPoolExecutor(max_workers=5) as excutor:
     excutor.map(downloadPic, pic_url_list)
