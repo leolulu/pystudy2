@@ -61,6 +61,7 @@ def processing(page_url):
 def downloadPic(img_url):
     global length_of_pic_left
     # print('downloading: ', 'page:{} '.format(str(page_num)), img_url)
+    content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
     with open("./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', ''), 'wb') as f:
         # try:
         #     f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
@@ -69,7 +70,7 @@ def downloadPic(img_url):
         # except Exception as e:
         #     print(e)
         #     time.sleep(60)
-        f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
+        f.write(content)
         length_of_pic_left -= 1
         print('{}pics left to download.'.format(length_of_pic_left))
 

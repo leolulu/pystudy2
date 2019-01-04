@@ -46,8 +46,9 @@ def downloadPic(img_url):
     if os.path.exists(path_name) == True:
         os.remove(path_name)
     else:
+        content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
         with open(path_name, 'wb') as f:
-            f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
+            f.write(content)
             length_of_pic_left -= 1
             print('{}pics left to download.'.format(length_of_pic_left))
 
