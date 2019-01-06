@@ -39,6 +39,7 @@ def picDownloader(url, file_path):
     with open(file_path, 'wb') as f:
         f.write(content)
 
+
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def getPicUrl(detail_page_info):
     folder_path = './public/福利社/{}'.format(detail_page_info[1])
@@ -48,7 +49,7 @@ def getPicUrl(detail_page_info):
         os.makedirs(folder_path)
     except Exception as e:
         print(detail_page_info[1], e)
-    with ThreadPoolExecutor(4) as excutor:
+    with ThreadPoolExecutor(6) as excutor:
         for url in img_urls:
             excutor.submit(picDownloader, url, os.path.join(folder_path, url.split('/')[-1]))
 
@@ -59,5 +60,5 @@ detail_page_url = []
 with ThreadPoolExecutor(32) as excutor:
     excutor.map(getDetailPageUrl, article_page_urls)
 
-with ThreadPoolExecutor(8) as excutor:
+with ThreadPoolExecutor(6) as excutor:
     excutor.map(getPicUrl, detail_page_url)
