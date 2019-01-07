@@ -60,8 +60,13 @@ def processing(page_url):
 def downloadPic(img_url):
     global length_of_pic_left
     # print('downloading: ', 'page:{} '.format(str(page_num)), img_url)
+    file_name = "./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', '')
+    if os.path.exists(file_name):
+        length_of_pic_left -= 1
+        print(length_of_pic_left,'exsits.')
+        return
     content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
-    with open("./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', ''), 'wb') as f:
+    with open(file_name, 'wb') as f:
         # try:
         #     f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
         #     length_of_pic_left -= 1
