@@ -20,10 +20,9 @@ except:
     pass
 
 next_url_list = [
-    # 'https://yande.re/post?tags=fishnets',
-    # 'https://yande.re/post?tags=garter',
-    # 'https://yande.re/post?tags=pantyhose'
-    'https://yande.re/post?tags=ass+pantyhose'
+    'https://yande.re/post?tags=fishnets',
+    'https://yande.re/post?tags=garter',
+    'https://yande.re/post?tags=pantyhose'
 ]
 
 pic_url_list = []
