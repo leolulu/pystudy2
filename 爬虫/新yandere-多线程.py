@@ -21,8 +21,8 @@ except:
 
 next_url_list = [
     'https://yande.re/post?tags=fishnets',
-    'https://yande.re/post?tags=garter',
-    'https://yande.re/post?tags=pantyhose'
+    # 'https://yande.re/post?tags=garter',
+    # 'https://yande.re/post?tags=pantyhose'
 ]
 
 pic_url_list = []
@@ -38,8 +38,8 @@ def processing(page_url):
     global page_num
     print(page_url)
     r = requests.get(page_url, proxies=proxies, headers=headers).content
+    img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
     with lock:
-        img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
         pic_url_list.extend(img_urls)
         print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
         page_num += 1
