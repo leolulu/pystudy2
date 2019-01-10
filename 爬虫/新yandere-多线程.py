@@ -20,10 +20,9 @@ except:
     pass
 
 next_url_list = [
-    # 'https://yande.re/post?tags=fishnets',
+    'https://yande.re/post?tags=fishnets',
     # 'https://yande.re/post?tags=garter',
     # 'https://yande.re/post?tags=pantyhose'
-    'https://yande.re/post?tags=ass+pantyhose'
 ]
 
 pic_url_list = []
@@ -39,8 +38,8 @@ def processing(page_url):
     global page_num
     print(page_url)
     r = requests.get(page_url, proxies=proxies, headers=headers).content
+    img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
     with lock:
-        img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
         pic_url_list.extend(img_urls)
         print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
         page_num += 1
@@ -61,8 +60,13 @@ def processing(page_url):
 def downloadPic(img_url):
     global length_of_pic_left
     # print('downloading: ', 'page:{} '.format(str(page_num)), img_url)
+    file_name = "./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', '')
+    if os.path.exists(file_name):
+        length_of_pic_left -= 1
+        print(length_of_pic_left,'exsits.')
+        return
     content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
-    with open("./public/yandere/"+img_url.split('/')[-1].replace('%20', '_').replace('yande.re_', ''), 'wb') as f:
+    with open(file_name, 'wb') as f:
         # try:
         #     f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
         #     length_of_pic_left -= 1

@@ -46,18 +46,17 @@ def downloadPic(img_url):
     if os.path.exists(path_name) == True:
         os.remove(path_name)
     else:
-        content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
         with open(path_name, 'wb') as f:
-            f.write(content)
+            f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
             length_of_pic_left -= 1
             print('{}pics left to download.'.format(length_of_pic_left))
 
 
 with ThreadPoolExecutor(max_workers=32) as excutor:
-    excutor.map(processing, ['http://konachan.com/post?page={}&tags=touhou'.format(i+1) for i in range(700)])
+    excutor.map(processing, ['http://konachan.com/post?page={}'.format(i+1) for i in range(30)])
 print('total list crawl finish.')
 
 length_of_pic_left = len(pic_url_list)
 
-with ThreadPoolExecutor(max_workers=64) as excutor:
+with ThreadPoolExecutor(max_workers=16) as excutor:
     excutor.map(downloadPic, pic_url_list)
