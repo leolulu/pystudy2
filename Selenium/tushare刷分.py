@@ -21,7 +21,7 @@ def run():
     browser_tushare = webdriver.Chrome()
     browser_mail = webdriver.Chrome()
 
-    browser_mail.set_page_load_timeout(20)
+    browser_mail.set_page_load_timeout(3600)
 
     try:
         browser_tushare.get("https://tushare.pro/register?reg=222170")
