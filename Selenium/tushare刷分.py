@@ -10,6 +10,10 @@ import re
 from selenium.common.exceptions import NoSuchElementException
 import os
 
+oc = Options()
+oc.add_argument('--headless')
+oc.add_argument('--disable-gpu')
+
 
 def run():
 
@@ -18,8 +22,8 @@ def run():
 
     fapi = fateadm_api.FateadmApi('309294', 'BdM+gl/hibSyJP+uPRTIayvz1T8Po4Kd', '109294', 'w+qA0pvUeRSj+P8zf8ikCkPG95tF8iQX')
 
-    browser_tushare = webdriver.Chrome()
-    browser_mail = webdriver.Chrome()
+    browser_tushare = webdriver.Chrome(options=oc)
+    browser_mail = webdriver.Chrome(options=oc)
 
     browser_mail.set_page_load_timeout(3600)
 
@@ -93,4 +97,4 @@ def main(run_times):
             print(e)
     print(result_list)
 
-main(run_times=10)
+main(run_times=100)
