@@ -1,19 +1,24 @@
 import requests
 from lxml import etree
 from selenium import webdriver
-from time import sleep
 from selenium.webdriver.chrome.options import Options
-import random
+from selenium.common.exceptions import NoSuchElementException
 import fateadm_api
+from time import sleep
+import random
 from PIL import Image
 import re
-from selenium.common.exceptions import NoSuchElementException
 import os
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
 oc = Options()
-# oc.add_argument('--headless')
-# oc.add_argument('--disable-gpu')
+oc.add_argument('--headless')
+oc.add_argument('--disable-gpu')
 oc.add_argument('--log-level=3')
+
+lock = threading.Lock()
+final_result_list = []
 
 
 def resendCode(browser):
@@ -26,15 +31,12 @@ def resendCode(browser):
 
 def run():
 
-    for every_file in os.listdir('./images'):
-        os.remove(os.path.join('./images', every_file))
-
     fapi = fateadm_api.FateadmApi('309294', 'BdM+gl/hibSyJP+uPRTIayvz1T8Po4Kd', '109294', 'w+qA0pvUeRSj+P8zf8ikCkPG95tF8iQX')
 
     browser_mail = webdriver.Chrome(options=oc)
     browser_tushare = webdriver.Chrome(options=oc)
 
-    browser_mail.set_page_load_timeout(20)
+    browser_mail.set_page_load_timeout(60)
 
     try:
         browser_tushare.get("https://tushare.pro/register?reg=222170")
@@ -49,17 +51,18 @@ def run():
     mail_address = browser_mail.find_element_by_id('mail_cur_name').get_attribute('value')
     print(mail_address)
 
-    captcha = browser_tushare.find_element_by_class_name('captcha')
-    left = captcha.location['x']
-    top = captcha.location['y']
-    right = captcha.location['x'] + captcha.size['width']
-    bottom = captcha.location['y'] + captcha.size['height']
-    im = Image.open('./images/screenshot.png')
-    im = im.crop((left, top, right, bottom))
-    im.save('./images/captcha.png')
+    with lock:
+        captcha = browser_tushare.find_element_by_class_name('captcha')
+        left = captcha.location['x']
+        top = captcha.location['y']
+        right = captcha.location['x'] + captcha.size['width']
+        bottom = captcha.location['y'] + captcha.size['height']
+        im = Image.open('./images/screenshot.png')
+        im = im.crop((left, top, right, bottom))
+        im.save('./images/captcha.png')
 
-    print('发送识别请求...')
-    rsp = fapi.PredictFromFile('30400', './images/captcha.png')
+        print('发送识别请求...')
+        rsp = fapi.PredictFromFile('30400', './images/captcha.png')
 
     browser_tushare.find_element_by_id('register-account').send_keys(mail_address)
     browser_tushare.find_element_by_id('register-password').send_keys(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba123456', 8)))
@@ -84,7 +87,7 @@ def run():
             browser_mail.find_element_by_xpath("//*[@id='convertd']/tr/td[position()=2]")
             break
         except NoSuchElementException:
-            if retry_time in [5,11,17]:
+            if retry_time in [5, 11, 17]:
                 resendCode(browser_tushare)
             sleep(10)
             print('shit not shown,{} times left to retry!'.format(retry_time))
@@ -109,14 +112,19 @@ def run():
 
 
 def main(run_times):
+    sleep_time = random.randint(1, 120)
+    print("I'll sleep {}s.".format(sleep_time))
+    sleep(sleep_time)
     result_list = []
     for i in range(run_times):
         try:
             result = run()
-            result_list.append('第{}次,result:{}.'.format(i, result))
+            result_list.append('第{}次,result:{}.'.format(i+1, result))
         except Exception as e:
             print(e)
-    print(result_list)
+    final_result_list.append(result_list)
 
 
-main(run_times=20)
+with ThreadPoolExecutor(5) as executor:
+    executor.map(main, [3, 3, 3, 3, 3])
+print(final_result_list)
