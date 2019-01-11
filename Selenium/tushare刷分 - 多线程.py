@@ -11,6 +11,7 @@ import re
 import os
 from concurrent.futures import ThreadPoolExecutor
 import threading
+import pandas as pd
 
 oc = Options()
 oc.add_argument('--headless')
@@ -19,6 +20,7 @@ oc.add_argument('--log-level=3')
 
 lock = threading.Lock()
 final_result_list = []
+seq_num = 0
 
 
 def resendCode(browser):
@@ -29,7 +31,7 @@ def resendCode(browser):
     print('resend code over...')
 
 
-def run():
+def run(seq_num):
 
     fapi = fateadm_api.FateadmApi('309294', 'BdM+gl/hibSyJP+uPRTIayvz1T8Po4Kd', '109294', 'w+qA0pvUeRSj+P8zf8ikCkPG95tF8iQX')
 
@@ -46,7 +48,7 @@ def run():
         browser_mail.quit()
         return 'open page timeout'
 
-    browser_tushare.save_screenshot('./images/screenshot.png')
+    browser_tushare.save_screenshot('./images/screenshot-{}.png'.format(seq_num))
 
     mail_address = browser_mail.find_element_by_id('mail_cur_name').get_attribute('value')
     print(mail_address)
@@ -57,12 +59,12 @@ def run():
         top = captcha.location['y']
         right = captcha.location['x'] + captcha.size['width']
         bottom = captcha.location['y'] + captcha.size['height']
-        im = Image.open('./images/screenshot.png')
+        im = Image.open('./images/screenshot-{}.png'.format(seq_num))
         im = im.crop((left, top, right, bottom))
-        im.save('./images/captcha.png')
+        im.save('./images/captcha-{}.png'.format(seq_num))
 
         print('发送识别请求...')
-        rsp = fapi.PredictFromFile('30400', './images/captcha.png')
+        rsp = fapi.PredictFromFile('30400', './images/captcha-{}.png'.format(seq_num))
 
     browser_tushare.find_element_by_id('register-account').send_keys(mail_address)
     browser_tushare.find_element_by_id('register-password').send_keys(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba123456', 8)))
@@ -112,19 +114,30 @@ def run():
 
 
 def main(run_times):
-    sleep_time = random.randint(1, 120)
+    global seq_num
+    _seq_num = seq_num
+    sleep_time = 1 * _seq_num
+    seq_num += 1
     print("I'll sleep {}s.".format(sleep_time))
     sleep(sleep_time)
     result_list = []
     for i in range(run_times):
         try:
-            result = run()
+            result = run(_seq_num)
             result_list.append('第{}次,result:{}.'.format(i+1, result))
         except Exception as e:
             print(e)
     final_result_list.append(result_list)
 
 
-with ThreadPoolExecutor(5) as executor:
-    executor.map(main, [3, 3, 3, 3, 3])
-print(final_result_list)
+def superMain():
+    for every_file in os.listdir('./images'):
+            os.remove(os.path.join('./images', every_file))
+    thread_num = 5
+    run_times = 2
+    with ThreadPoolExecutor(thread_num) as executor:
+        executor.map(main, [run_times for i in range(thread_num)])
+    print(pd.value_counts([k.split(':')[-1].replace('.','') for j in final_result_list for k in j]))
+
+if __name__ == '__main__':
+    superMain()
