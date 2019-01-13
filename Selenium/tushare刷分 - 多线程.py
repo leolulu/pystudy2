@@ -133,11 +133,11 @@ def main(run_times):
 def superMain():
     for every_file in os.listdir('./images'):
             os.remove(os.path.join('./images', every_file))
-    thread_num = 5
-    run_times = 2
+    thread_num = 7
+    run_times = 7
     with ThreadPoolExecutor(thread_num) as executor:
         executor.map(main, [run_times for i in range(thread_num)])
-    print(pd.value_counts([k.split(':')[-1].replace('.','') for j in final_result_list for k in j]))
+    print('\nfinal result:\n',pd.value_counts([k.split(':')[-1].replace('.','') for j in final_result_list for k in j]))
 
 if __name__ == '__main__':
     superMain()
