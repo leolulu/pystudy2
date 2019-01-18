@@ -16,7 +16,7 @@ proxies = {
 }
 lock = threading.Lock()
 
-r = session.get('http://boards.4chan.org/gif/thread/14178152', headers=header, proxies=proxies)
+r = session.get('http://boards.4chan.org/gif/thread/14222391', headers=header, proxies=proxies)
 post = etree.HTML(r.content)
 
 imgs = post.xpath(".//a[@class='fileThumb']/@href")

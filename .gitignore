@@ -24,6 +24,7 @@ yarn-error.log*
 *.png
 *.gif
 *.xlsx
+*.csv
 
 # self
 /public/*
