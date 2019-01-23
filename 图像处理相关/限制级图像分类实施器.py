@@ -18,7 +18,11 @@ for i in file_list_tuple:
         cated_rating = 'Safe(5-10)'
     if explicit_rating >= 0.1 and explicit_rating < 0.15:
         cated_rating = 'Safe(10-15)'
-    if explicit_rating >= 0.15:
+    if explicit_rating >= 0.15 and explicit_rating < 0.20:
+        cated_rating = 'Safe(15-20)'
+    if explicit_rating >= 0.20 and explicit_rating < 0.25:
+        cated_rating = 'Safe(20-25)'
+    if explicit_rating >= 0.25:
         cated_rating = 'Explicit({})'.format(explicit_rating)
 
     os.rename(i[0], re.sub(r"(\d+)_", r"{}_\1_".format(cated_rating), i[0]))
