@@ -36,7 +36,7 @@ for i in core_list:
 core_list.sort(key=lambda x: x['aspect_ratio'])
 # 创建文件夹
 for i in range(how_many_batch+1):
-    new_dic_name = os.path.join(dic_path, '{}th'.format(str(i+1)))
+    new_dic_name = os.path.join(dic_path, '{}th'.format(str(i+1).zfill(2)))
     os.makedirs(new_dic_name)
     dic_list.append(new_dic_name)
 # 移动文件
