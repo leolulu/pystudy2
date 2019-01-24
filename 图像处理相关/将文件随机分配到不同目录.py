@@ -4,7 +4,7 @@ import math
 import random
 from PIL import Image
 # 定义文件目录及变量
-base_path = r'E:\python\pystudy2\public\yandere'
+base_path = r'E:\python\pystudy2\public\yandere-rated'
 dic_path = r'F:\F盘中转站'
 batch_dir_name = base_path.split('\\')[-1]
 batch_capacity = 50

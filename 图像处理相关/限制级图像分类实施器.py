@@ -3,7 +3,7 @@ import re
 from sklearn.externals import joblib
 
 
-base_dir = r'E:\Python\PycharmProjects\pystudy2\public\yandere'
+base_dir = r'E:\python\pystudy2\public\yandere'
 tf = joblib.load('./图像处理相关/tf.pkl')
 bys = joblib.load('./图像处理相关/bys.pkl')
 
@@ -25,4 +25,4 @@ for i in file_list_tuple:
     if explicit_rating >= 0.25:
         cated_rating = 'Explicit({})'.format(explicit_rating)
 
-    os.rename(i[0], re.sub(r"(\d+)_", r"{}_\1_".format(cated_rating), i[0]))
+    os.rename(i[0], re.sub(r"\\(\d+)_", r"\\{}_\1_".format(cated_rating), i[0]))
