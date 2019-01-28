@@ -7,12 +7,15 @@ from PIL import Image
 
 def imgSelector(woring_type):
     # 定义文件目录及变量
+    if woring_type not in ['home', 'office']:
+        raise ValueError('现有情景只有home、office，请从中选择')
     if woring_type == 'home':
         base_path = r'E:\python\pystudy2\public\yandere-rated'
         dic_path = r'F:\F盘中转站'
     if woring_type == 'office':
         base_path = r'F:\borudownload'
         dic_path = r'F:\迅雷下载\bilibili_download\OneDrive\图片'
+
     batch_dir_name = base_path.split('\\')[-1]
     batch_capacity = 50
     dic_path = os.path.join(dic_path, batch_dir_name)
@@ -66,5 +69,6 @@ def imgSelector(woring_type):
         except Exception as e:
             print(e)
 
+
 if __name__ == '__main__':
-    imgSelector(woring_type='office') # 'home' or 'office'
+    imgSelector(woring_type='office')  # 'home' or 'office'
