@@ -31,6 +31,6 @@ x_train = tf.fit_transform(data.tag_list)
 bys.fit(x_train, data.rating)
 timeprint('训练完毕...')
 
-joblib.dump(tf, './图像处理相关/tf.pkl')
-joblib.dump(bys, './图像处理相关/bys.pkl')
+joblib.dump(tf, './tf.pkl')
+joblib.dump(bys, './bys.pkl')
 timeprint('模型保存完毕...')
