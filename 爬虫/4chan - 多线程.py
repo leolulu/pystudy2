@@ -4,6 +4,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from retrying import retry
 import threading
+import re
 
 session = requests.session()
 header = {
@@ -16,7 +17,9 @@ proxies = {
 }
 lock = threading.Lock()
 
-r = session.get('http://boards.4chan.org/gif/thread/14222391', headers=header, proxies=proxies)
+r = session.get('http://boards.4chan.org/gif/thread/14513800', headers=header, proxies=proxies)
+dir_name = './public/4chan/{}'.format(re.findall(r'<title>(.*?)</title>', r.text)[0].replace('/', ''))
+os.makedirs(dir_name)
 post = etree.HTML(r.content)
 
 imgs = post.xpath(".//a[@class='fileThumb']/@href")
@@ -24,17 +27,14 @@ imgs = ['https:'+i for i in imgs]
 f_name = post.xpath(".//div[@class='fileText']/a/text()")
 imgs_f_name = zip(imgs, f_name)
 total_num = len(imgs)
-try:
-    os.mkdir('./public/4chan')
-except Exception as e:
-    print(e)
 
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def downloader(item):
     global total_num
-    with open('./public/4chan/' + item[1], 'wb') as f:
-        f.write(session.get(item[0], proxies=proxies, headers=header).content)
+    content = session.get(item[0], proxies=proxies, headers=header).content
+    with open(os.path.join(dir_name , item[1]), 'wb') as f:
+        f.write(content)
     total_num -= 1
     print('{}items left to download.'.format(total_num))
 
