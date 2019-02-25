@@ -22,6 +22,6 @@ class RecursionFileSerach:
         return self.total_path_file_list
 
 if __name__ == '__main__':
-    r1 = RecursionFileSerach(r'C:\Users\Administrator\Desktop\自动保存')
+    r1 = RecursionFileSerach(r'E:\Python\PycharmProjects\pystudy3-data-analysis\数据分析项目实战\陌陌财报分析')
     x=r1.run()
     print([i for i in x if i.find('验证')!=-1])

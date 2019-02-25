@@ -33,7 +33,7 @@ class HorsepinesPipeline(object):
             media_name = item['media_name']
             media_name = media_name.split('?')[0]
             media_name = str(time.time()) + '.' + media_name.split('.')[-1]
-            print(r'%%% ', media_name)
+            # print(r'~~~ ', media_name)
             with open('./public/' + media_name, 'wb') as f:
                 f.write(item['media_data'])
 
