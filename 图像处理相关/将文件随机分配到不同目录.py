@@ -10,9 +10,8 @@ def imgSelector(woring_type):
     if woring_type not in ['home', 'office']:
         raise ValueError('现有情景只有home、office，请从中选择')
     if woring_type == 'home':
-        base_path = r'E:\python\pystudy2\public\yandere-rated'
-        dic_path = r'F:\F盘中转站'
-        batch_capacity = 50
+        base_path = r'E:\TDDOWNLOAD\图片\rosi'
+        dic_path = r'E:\裏\图\OneDrive - Office.Inc\图片'
     if woring_type == 'office':
         base_path = r'E:\Python\PycharmProjects\pystudy2\public\yandere'
         dic_path = r'F:\迅雷下载\bilibili_download\OneDrive - Office.Inc'
@@ -77,4 +76,4 @@ def imgSelector(woring_type):
 
 
 if __name__ == '__main__':
-    imgSelector(woring_type='office')  # 'home' or 'office'
+    imgSelector(woring_type='home')  # 'home' or 'office'

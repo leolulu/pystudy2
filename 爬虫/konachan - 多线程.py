@@ -29,14 +29,17 @@ page_num = 1
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
 def processing(page_url):
-    global page_num
-    print(page_url)
-    r = requests.get(page_url, proxies=proxies, headers=headers).content
-    with lock:
-        img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
-        pic_url_list.extend(img_urls)
-        print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
-        page_num += 1
+    try:
+        global page_num
+        print(page_url)
+        r = requests.get(page_url, proxies=proxies, headers=headers).content
+        with lock:
+            img_urls = etree.HTML(r).xpath("//ul[@id='post-list-posts']/li/a/@href")
+            pic_url_list.extend(img_urls)
+            print('current Page.{},length of pic list is {}.'.format(page_num, len(pic_url_list)))
+            page_num += 1
+    except Exception as e:
+        print(e)
 
 
 @retry(wait_exponential_multiplier=1000, wait_exponential_max=60000)
@@ -54,7 +57,7 @@ def downloadPic(img_url):
 
 
 with ThreadPoolExecutor(max_workers=32) as excutor:
-    excutor.map(processing, ['http://konachan.com/post?page={}'.format(i+1) for i in range(10)])
+    excutor.map(processing, ['http://konachan.com/post?page={}'.format(i+1) for i in range(15)])
 print('total list crawl finish.')
 
 length_of_pic_left = len(pic_url_list)
