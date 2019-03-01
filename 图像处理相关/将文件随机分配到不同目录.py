@@ -5,7 +5,7 @@ import random
 from PIL import Image
 
 
-def imgSelector(woring_type):
+def imgSelector(woring_type, batch_capacity):
     # 定义文件目录及变量
     if woring_type not in ['home', 'office']:
         raise ValueError('现有情景只有home、office，请从中选择')
@@ -15,7 +15,6 @@ def imgSelector(woring_type):
     if woring_type == 'office':
         base_path = r'E:\Python\PycharmProjects\pystudy2\public\yandere'
         dic_path = r'F:\迅雷下载\bilibili_download\OneDrive - Office.Inc'
-        batch_capacity = 100
 
     batch_dir_name = base_path.split('\\')[-1]
     dic_path = os.path.join(dic_path, batch_dir_name)
@@ -62,7 +61,7 @@ def imgSelector(woring_type):
                 print(file_name,str(i))
                 shutil.move(file_name,str(i))'''
     for i in range(how_many_batch):
-        print('任务完成{}%...'.format(round(i/how_many_batch,0)))
+        print('移动任务完成{}%...'.format(math.ceil(i/how_many_batch*100)))
         for _j in range(batch_capacity):
             try:
                 shutil.move(core_list.pop()['file_dir'], dic_list[i])
@@ -73,7 +72,8 @@ def imgSelector(woring_type):
             shutil.move(core_list.pop()['file_dir'], dic_list[-1])
         except Exception as e:
             print(e)
+    print('任务完成...')
 
 
 if __name__ == '__main__':
-    imgSelector(woring_type='home')  # 'home' or 'office'
+    imgSelector(woring_type='office', batch_capacity=75)  # 'home' or 'office'
