@@ -57,7 +57,7 @@ def downloadPic(img_url):
 
 
 with ThreadPoolExecutor(max_workers=32) as excutor:
-    excutor.map(processing, ['http://konachan.com/post?page={}'.format(i+1) for i in range(15)])
+    excutor.map(processing, ['http://konachan.com/post?page={}'.format(i+1) for i in range(50)])
 print('total list crawl finish.')
 
 length_of_pic_left = len(pic_url_list)

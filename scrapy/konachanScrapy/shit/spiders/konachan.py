@@ -5,7 +5,7 @@ import scrapy
 class KonachanSpider(scrapy.Spider):
     name = 'konachan'
     allowed_domains = ['konachan.com','konachan.net']
-    start_urls = ['http://konachan.com/post?tags=girls_frontline']
+    start_urls = ['http://konachan.net/post?tags=girls_frontline']
 
     page_num = 1
 

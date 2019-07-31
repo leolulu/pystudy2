@@ -20,7 +20,7 @@ except:
     pass
 
 next_url_list = [
-    'https://yande.re/post?tags=thighhighs'
+    'https://yande.re/post?tags=tentacles'
 ]
 
 pic_url_list = []
@@ -63,7 +63,7 @@ def downloadPic(img_url):
         length_of_pic_left -= 1
         print(length_of_pic_left,'exsits.')
         return
-    content = requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content
+    content = requests.get(img_url, timeout=600, proxies=None, headers=headers).content
     with open(file_name, 'wb') as f:
         # try:
         #     f.write(requests.get(img_url, timeout=600, proxies=proxies, headers=headers).content)
@@ -80,8 +80,8 @@ def downloadPic(img_url):
 for url in next_url_list:
     r = requests.get(url, proxies=proxies, headers=headers).content
     catagray_page_count = int(etree.HTML(r).xpath("//div[@class='pagination']/a[last()-1]/text()")[0])
-    catagray_page_count = 20 #TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!
-    with ThreadPoolExecutor(max_workers=128) as excutor:
+    # catagray_page_count = 20 #TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!TEMP!!!
+    with ThreadPoolExecutor(max_workers=16) as excutor:
         # for url in [url+'&page='+str(i+1) for i in range(catagray_page_count)]:
         #     excutor.submit(processing,url)
         excutor.map(processing, [url+'&page='+str(i+1) for i in range(catagray_page_count)])

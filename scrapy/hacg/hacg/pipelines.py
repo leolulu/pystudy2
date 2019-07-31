@@ -23,7 +23,7 @@ class HacgPipeline(object):
             self.shhet1.write(self.r, c, label=item[i])
             c += 1
         self.r += 1
-        self.workbook.save('hacg.xls')
+        self.workbook.save('hacg2.xls')
         print(self.r)
         return item
 
