@@ -42,10 +42,10 @@ def from_detail_page_get_img(detail_page_url):
         title = xpath_get_from_url(detail_page_url, r"//h1[@class='entry-title']/span/text()")[0]
         folder_path = os.path.join(BASE_DIR, title)
         print(title)
-        try:
+        if os.path.exists(folder_path):
+            return
+        else:
             os.makedirs(folder_path)
-        except:
-            pass
         inner_page_url = [detail_page_url]
         inner_page_url.extend(xpath_get_from_url(inner_page_url[0], r"//div[@class='page-links']/a/@href"))
         img_urls = []
